@@ -19,13 +19,13 @@
           </div>
           <div class="mb-3">
             <ValidationProvider v-slot="{ errors }" rules="required" class="w-4/5">
-              <q-input-price v-model="valueContent.iuran_spp" label="IURAN SPP" placeholder="Masukkan iuran SPP" :readonly="valueContent.iuran_spp > 0" />
+              <q-input-price v-model="valueContent.iuran_spp" label="IURAN SPP" placeholder="Masukkan iuran SPP" />
               <span class="text-xs text-danger">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
           <div class="mb-3">
             <ValidationProvider v-slot="{ errors }" rules="required" class="w-4/5">
-              <q-input-price v-model="valueContent.iuran_tahunan" label="IURAN Tahunan" placeholder="Masukkan iuran tahunan" :readonly="valueContent.iuran_tahunan > 0" />
+              <q-input-price v-model="valueContent.iuran_tahunan" label="IURAN Tahunan" placeholder="Masukkan iuran tahunan" />
               <span class="text-xs text-danger">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>

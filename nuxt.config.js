@@ -90,7 +90,8 @@ export default {
   },
 
   axios: {
-    baseURL: 'http://localhost:8000'
+    baseURL: 'http://103.179.57.184:8080'
+    // baseURL: 'http://localhost:8000'
   },
 
   // nuxt auth configuration

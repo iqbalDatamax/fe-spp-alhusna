@@ -2,7 +2,7 @@
   <div>
     <content-body title="Tahun Ajaran & Atur IURAN Per Kelas" icon="fas fa-calendar-alt">
       <button class="btn-primary mb-4" @click="handleCreate()"><i class="fas fa-plus mr-2"></i>Tahun Ajaran Baru</button>
-      <div class="flex flex-col">
+      <div v-if="periode" class="flex flex-col">
         <p class="mr-2 text-lg text-primary-dark font-medium mb-3">Tahun Ajaran {{ periode.tahunAjaran }} <i class="fas fa-pen text-black ml-1.5" @click="handleEdit(periode.id)"></i></p>
         <card-ta-iuran :lists="iuranList" @buttonEdit="handleEditIuran" />
       </div>

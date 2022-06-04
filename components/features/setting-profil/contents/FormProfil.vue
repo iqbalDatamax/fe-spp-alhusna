@@ -44,10 +44,10 @@
 
       <div class="flex flex-col lg:flex-row gap-4 mb-4">
         <div class="w-full">
-          <q-input v-model="valueContent.email" label="Email" placeholder="Masukkan email sekolah"  />
+          <q-input v-model="valueContent.email" label="Email Sekolah" placeholder="Masukkan email sekolah"  />
         </div>
         <div class="w-full">
-          <q-input v-model="valueContent.telpon" label="Telepon" placeholder="Masukkan telpon sekolah" />
+          <q-input v-model="valueContent.telpon" label="Telepon Sekolah" placeholder="Masukkan telepon sekolah" />
         </div>
       </div>
 

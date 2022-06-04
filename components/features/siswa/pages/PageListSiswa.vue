@@ -4,7 +4,6 @@
       <card-filter-table v-model="filter" :periode="listTa" :item-kelas="listKelas" @clickButton="handleCreate" @changeSelect="FilterPage" @eventChange="handleSearch" />
       <div v-if="rows && rows.length > 0" class="overflow-x-auto pb-4">
         <table-checked :with-check="true" :columns="columns" :rows="rows" :top-action="topAction" :action-content="actionContent" @clickButton="handleAction" @clickActionTop="handleActionTop" />
-      </div>
       <div class="mt-4 lg:px-3">
         <vue-ads-pagination
           :total-items="totalItems"
@@ -14,6 +13,7 @@
           @page-change="pageChange"
         >
         </vue-ads-pagination>
+      </div>
       </div>
     </content-body>
     <alert-information v-bind="bindAlert" @clickConfirm="handleConfirmAlert" />

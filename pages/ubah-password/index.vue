@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'IndexUbahPasswordPage',
   components: {
@@ -13,6 +15,20 @@ export default {
   middleware: 'auth',
   data() {
     return {}
+  },
+  computed: {
+    ...mapGetters(['loggedInUser'])
+  },
+  mounted(){
+    this.checkSuperAdmin()
+  },
+  methods: {
+    checkSuperAdmin() {
+      if(this.loggedInUser.peran !== 'super-admin') {
+        this.$toast.error('Mohon maaf kamu tidak memiliki akses halaman ini')
+        this.$router.replace('/')
+      }
+    }
   }
 }
 </script>

@@ -2,10 +2,14 @@
   <div>
     <content-body title="Data Kelas" icon="fas fa-door-open">
       <button class="btn-primary my-4" @click="handleCreate"><i class="fas fa-plus mr-2"></i>Tambah Kelas</button>
-      <div class="overflow-x-auto pb-4">
+      <div v-if="rows && rows.length > 0" class="overflow-x-auto pb-4">
         <table-checked :columns="columns" :with-nomor="true" :rows="rows" :action-content="actionContent" @clickButton="handleAction" />
       </div>
+      <div v-else class="my-6 p-4 shadow-sm border rounded-md">
+        <p class="text-center text-danger font-semibold text-sm">Data tidak ditemukan....</p>
+      </div>
     </content-body>
+    <q-loading class="print:hidden" :loading="loading" />
     <modal-kelas :model="model" :angkatan="angkatan" :user="user" @clickModal="handleModalsubmit"  />
   </div>
 </template>
@@ -34,7 +38,8 @@ export default Vue.extend({
       ],
       model: {} as any,
       angkatan: [],
-      user: []
+      user: [],
+      loading: false
     }
   },
   mounted() {
@@ -42,9 +47,11 @@ export default Vue.extend({
   },
   methods: {
     async initialize() {
+      this.loading = true
       const result = await this.masterService.request('list-kelas')
       if(result.code === 200) {
         this.rows = result.data
+        this.loading = false
       }
     },
     handleCreate(){
@@ -52,6 +59,7 @@ export default Vue.extend({
       this.model = {}
     },
     async handleAction(menu:any, id: any){
+      this.loading = true
       const _this = this as any
       if (menu === 'btn-edit'){
         const result = await this.masterService.request('get-kelas', id)
@@ -64,10 +72,12 @@ export default Vue.extend({
             edit: true 
           }
           _this.$modal.show('modalKelas')
+          this.loading = false
         }
       }
     },
     async handleModalsubmit() {
+      this.loading = true
       const _this = this as any
       let result: any = {}
       if(!this.model?.edit) {
@@ -80,6 +90,7 @@ export default Vue.extend({
         _this.initialize()
         _this.$toast.success(result.message)
         _this.$modal.hide('modalKelas')
+        this.loading = false
       } else {
         _this.$toast.error(result.message)
       }

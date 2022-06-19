@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/laporan/pages/PageLaporan.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-tu'],
   data() {
     return {}
   }

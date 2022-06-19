@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/master-data/pages/PageEkskul.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-admin'],
   data() {
     return {}
   }

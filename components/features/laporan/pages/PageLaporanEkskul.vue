@@ -6,7 +6,7 @@
         <div class="shadow p-2.5 border rounded mt-4">
           <div v-if="rows && rows.length > 0" id="print-body" class="overflow-x-auto pb-4">
             <card-kop-laporan />
-            <div class="text-center text-h5 font-semibold text-black border-t border-black pb-4">
+            <div class="text-center text-h5 font-semibold border-t border-black pb-4">
               <p class="pt-2">Laporan Pembayaran Ektrakurikuler</p>
               <p class="">Tahun Ajaran {{ta}}</p>
               <p v-if="model.startDate && model.endDate" class="text-body">{{dateFormat(model.startDate)}} <span class="font-normal"> - </span> {{dateFormat(model.endDate)}}</p>
@@ -20,6 +20,7 @@
         <p class="text-center text-black font-semibold text-sm">Data laporan tidak ditemukan, silahkan filter kembali</p>
       </div>
     </content-body>
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
@@ -50,6 +51,7 @@ export default Vue.extend({
       ta: '',
       columns: [
         { key: 'namaSiswa', text: 'Nama Siswa', align: 'left' },
+        { key: 'nisSiswa', text: 'NIS', align: 'center' },
         { key: 'ekskul', text: 'Ekskul', align: 'left' },
         { key: 'iuran', text: 'Iuran', align: 'center' },
         { key: 'deskripsi', text: 'Deskripsi', align: 'left' },
@@ -57,7 +59,8 @@ export default Vue.extend({
         { key: 'petugas', text: 'Petugas TU', align: 'left' }
       ],
       rows: [],
-      tgl: dateFormatter('date', Date.now())
+      tgl: dateFormatter('date', Date.now()),
+      loading: false
     }
   },
   computed: {
@@ -74,10 +77,12 @@ export default Vue.extend({
     this.initialize()
   },
   methods: {
-    initialize(){
-      this.fetchTa()
+    async initialize(){
+      this.loading = true
+      await this.fetchTa()
       this.fetchEkskul()
       this.handleClick()
+      this.loading = false
     },
     async fetchTa() {
       const result = await this.masterService.request('list-ta')
@@ -93,11 +98,13 @@ export default Vue.extend({
       }
     },
     async handleClick() {
+      this.loading = true
       const params = this.model
       const result = await this.pembayaranService.request('laporan-ekskul', params)
       if(result.code === 200) {
         const data = result.data
         this.rows = data
+        this.loading = false
         if(this.rows.length > 0) {
           this.isPrint = true
         } else {

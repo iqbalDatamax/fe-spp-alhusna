@@ -9,7 +9,7 @@
           </select>
           <p class="text-xs text-danger">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider v-slot="{ errors }" rules="required" class="w-full">
+        <ValidationProvider v-slot="{ errors }" rules="required" class="w-full mt-2.5">
           <label class="label">Pilih Siswa <span class="text-danger">*</span></label>
           <v-select
             v-model="valueContent.id_siswa"
@@ -26,25 +26,25 @@
           <p class="text-xs text-danger">{{ errors[0] }}</p>
         </ValidationProvider>
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full mt-2.5">
-          <label class="label">Pilih Ekskul <span class="text-danger">*</span></label>
+          <label class="label">Pilih Ekskul / Pembayaran lainya<span class="text-danger">*</span></label>
           <v-select
             v-model="valueContent.ekskul"
             class="vs h-[40px] px-[3px] border-black-light bg-white outline-none border rounded-[4px] w-full"
-            placeholder="Cari Ekstracurikuler"
+            placeholder="Cari Ekstracurikuler / pembayaran lainnya"
             :reduce="(ekskul) => ekskul.id"
             label="namaEkskul"
             :options="ekskul"
           >
             <span slot="no-options" class="text-danger">
-              Ekskul tidak ditemukan...
+              Ekskul / jenis pembayaran tidak ditemukan...
             </span>
           </v-select>
           <p class="text-xs text-danger">{{ errors[0] }}</p>
         </ValidationProvider>
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full mt-2.5">
           <div>
-            <q-input v-model="valueContent.ansuran" label="IURAN" placeholder="Masukkan Iuran" :required="true" />
-            <p class="text-xs text-danger">{{ errors[0] }}</p>
+            <q-input-price v-model="valueContent.ansuran" label="IURAN" placeholder="Masukkan iuran" :required="true" />
+            <span class="text-xs text-danger">{{ errors[0] }}</span>
           </div>
         </ValidationProvider>
         <div class="mt-2.5">

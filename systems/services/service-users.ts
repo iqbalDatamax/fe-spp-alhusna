@@ -1,5 +1,5 @@
 import Api from '@/systems/services/api'
-import { AdminModelPaginate, AdminModel, GuruModelPaginate, GuruModel, SiswaModelPaginate, SiswaModel, SiswaPeriodeModel } from '@/systems/models/users'
+import { AdminModelPaginate, AdminModel, GuruModelPaginate, GuruModel, SiswaModelPaginate, GetSiswaModel, SiswaPeriodeModel } from '@/systems/models/users'
 
 export class UsersService extends Api {
   constructor(http: any) {
@@ -62,6 +62,11 @@ export class UsersService extends Api {
     return { method: 'post', url, data }
   }
 
+  UploadFile(data: any) {
+    const url = `/v1/uploadandcreatesiswa`
+    return { method: 'post', url, data }
+  }
+
   request(menu?: string, data?: any, type?:any): any {
     const _this = this as any
     let configs = {}
@@ -94,7 +99,7 @@ export class UsersService extends Api {
         } else if (type === 'guru') {
           parser = (data: any) => ({ data: new GuruModel(data.data) })
         } else if (type === 'siswa') {
-          parser = (data: any) => ({ data: new SiswaModel(data.data) })
+          parser = (data: any) => ({ data: new GetSiswaModel(data.data) })
         }
         break
       case 'delete-user':
@@ -111,6 +116,9 @@ export class UsersService extends Api {
         break
       case 'ubah-password':
         configs = _this.UbahPassword(data)
+        break
+      case 'file':
+        configs = _this.UploadFile(data)
         break
     }
 

@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/pembayaran-spp/pages/PagePembayaranSpp.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-tu'],
   data() {
     return {}
   }

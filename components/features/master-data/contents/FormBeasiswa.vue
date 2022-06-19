@@ -8,8 +8,8 @@
     				v-model="valueContent.id_siswa"
 						class="vs h-[40px] px-[3px] border-black-light bg-white outline-none border rounded-[4px]"
 						placeholder="Pilih Siswa"
-    				label="nama"
-            :reduce="(usr) => usr.id"
+    				label="itemSearch"
+            :reduce="(siswa) => siswa.id"
     				:options="user"
     			>
     		  </v-select>
@@ -28,14 +28,14 @@
       <div class="flex flex-col lg:flex-row lg:gap-3">
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full lg:w-1/2">
           <div class="mb-3">
-            <q-input v-model="valueContent.potongan_spp" label="Potongan SPP (%)" placeholder="Masukkan potongan spp" />
-            <p class="text-xs text-danger">{{ errors[0] }}</p>
+            <q-input-price v-model="valueContent.potongan_spp" label="Potongan SPP" placeholder="Masukkan potongan spp" :required="true" />
+            <span class="text-xs text-danger">{{ errors[0] }}</span>
           </div>
         </ValidationProvider>
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full lg:w-1/2">
           <div class="mb-3">
-            <q-input v-model="valueContent.potongan_iuran" label="Potongan IURAN (%)" placeholder="Masukkan potongan iuran" />
-            <p class="text-xs text-danger">{{ errors[0] }}</p>
+            <q-input-price v-model="valueContent.potongan_iuran" label="Potongan IURAN" placeholder="Masukkan potongan iuran" :required="true" />
+            <span class="text-xs text-danger">{{ errors[0] }}</span>
           </div>
         </ValidationProvider>
       </div>

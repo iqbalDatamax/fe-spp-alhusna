@@ -9,13 +9,14 @@
     </content-body>
     <modal-ta v-model="model.tahun_ajaran" :edit="model.edit" @clickModal="handleModalSubmit" />
     <modal-iuran v-model="iuranModel" :items="iuranList" @clickModal="handleModalSubmit" />
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { MasterService } from '~/systems/services/service-master-data' 
-import { formatterNumber } from '@/systems/helpers/formatter'
+import { formatterNumber, formatterCurrency } from '@/systems/helpers/formatter'
 
 export default Vue.extend({
   components: {
@@ -38,7 +39,8 @@ export default Vue.extend({
       model: {} as any,
       periode: {} as any,
       iuranList: [] as any,
-      iuranModel: {} as any
+      iuranModel: {} as any,
+      loading: false
     }
   },
   mounted() {
@@ -46,8 +48,10 @@ export default Vue.extend({
   },
   methods: {
     async initialize() {
+      this.loading = true
       await this.fetchTa()
       await this.fetchPeriodeIuran()
+      this.loading = false
     },
     async fetchTa() {
       const result = await this.masterService.request('list-ta')
@@ -65,6 +69,7 @@ export default Vue.extend({
       }
     },
     async handleEditIuran(id: any) {
+      this.loading = true
       const _this = this as any
       const result = await this.masterService.request('get-iuran', id)
       if(result.code === 200) {
@@ -72,15 +77,19 @@ export default Vue.extend({
         this.iuranModel = {
           id: data?.id || null,
           namaKelas: data?.namaKelas || null,
-          iuran_spp: data?.iuranSpp || null,
-          iuran_tahunan: data?.iuranTahunan || null,
+          iuran_spp: formatterCurrency(data?.iuranSpp) || null,
+          iuran_tahunan: formatterCurrency(data?.iuranTahunan) || null,
           id_periode: data?.idPeriode || null,
-          id_kelas: data?.idKelas || null
+          id_kelas: data?.idKelas || null,
+          cAt: data.cAt || null,
+          uAt: data.uAt || null
         }
         _this.$modal.show('modalIuran')
+        this.loading = false
       }
     },
     async handleModalSubmit(menu: any) {
+      this.loading = true
       const _this = this as any
       if(menu === "iuran") {
         const data = {
@@ -95,6 +104,7 @@ export default Vue.extend({
           _this.$toast.success(result.message)
           _this.$modal.hide('modalIuran')
           _this.initialize()
+          this.loading = false
         }
       } else {
         const result = await this.masterService.request(this.model?.edit ? 'update-ta':'create-ta', this.model)
@@ -103,6 +113,7 @@ export default Vue.extend({
           this.initialize()
           _this.$toast.success(result.message)
           this.model = {}
+          this.loading = false
         } else {
           _this.$toast.error(result.message)
         }
@@ -114,6 +125,7 @@ export default Vue.extend({
       _this.$modal.show('modalTa')
     },
     async handleEdit(id: any) {
+      this.loading = true
       const _this = this as any
       _this.$modal.show('modalTa')
       const result = await this.masterService.request('get-ta', id)
@@ -124,6 +136,7 @@ export default Vue.extend({
           tahun_ajaran: data.tahunAjaran,
           edit: true 
         }
+        this.loading = false
       }
     }
   }

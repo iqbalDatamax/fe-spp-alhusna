@@ -1,3 +1,4 @@
+import { formatterCurrency } from '@/systems/helpers/formatter'
 export class TahunAjaranModel {
   id: number
   tahunAjaran: string
@@ -40,8 +41,8 @@ export class BeasiswaModel {
     this.nis = data.user?.nis || null
     this.idPeriode = data.id_periode || null
     this.tahunAjaran = data.periode?.tahun_ajaran || null
-    this.potonganSpp = data.potongan_spp || null
-    this.potonganIuran = data.potongan_iuran || null
+    this.potonganSpp = formatterCurrency(data.potongan_spp) || null
+    this.potonganIuran = formatterCurrency(data.potongan_iuran) || null
   }
 }
 
@@ -66,6 +67,8 @@ export class PeriodeIuranModel {
   tahunAjaran: string
   idPeriode: any
   idKelas: any
+  cAt: any
+  uAt: any
 
   constructor(data:any) {
     data = data || {}
@@ -76,5 +79,7 @@ export class PeriodeIuranModel {
     this.namaKelas = data?.kela?.nama_kelas || null
     this.idPeriode = data?.id_periode || null
     this.idKelas = data?.id_kelas || null
+    this.cAt = data.createdAt || null
+    this.uAt = data.updatedAt || null
   }
 }

@@ -20,11 +20,13 @@
       <content-print :siswa="dataSiswa" :ta="periode" :data-iuran="dataIuran" :ansuran="numberFormat(iuran)" :tgl="tgl" />
     </div>
     <modal-review-bayar :siswa="dataSiswa" :ta="periode" :data-iuran="dataIuran" :ansuran="numberFormat(iuran)" :tgl="tgl" class="print:hidden" @clickModal="handleCreateIuran" />
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { UsersService } from '~/systems/services/service-users'
 import { MasterService } from '~/systems/services/service-master-data' 
 import { PembayaranService } from '~/systems/services/services-pembayaran' 
@@ -57,8 +59,12 @@ export default Vue.extend({
       rows: [],
       periode: null,
       iuran: 0 as any,
-      tgl: dateFormatter('date', Date.now())
+      tgl: dateFormatter('date', Date.now()),
+      loading: false
     }
+  },
+  computed: {
+    ...mapGetters(['loggedInUser'])
   },
   watch: {
     'model.id_periode'() {
@@ -70,8 +76,10 @@ export default Vue.extend({
   },  
   methods: {
     async initialize() {
+      this.loading = true
       await this.fetchTa()
       await this.fetchSiswa()
+      this.loading = false
     },
     async fetchSiswa() {
       const params = { id_periode: this.model?.id_periode }
@@ -93,6 +101,7 @@ export default Vue.extend({
       }
     },
     async handleSearch() {
+      this.loading = true
       const data = {
         id_siswa: this.model?.id_siswa,
         params : { periode: this.model?.id_periode }
@@ -107,6 +116,7 @@ export default Vue.extend({
         this.cekHistoryPembayaran()
         this.iuran = null
       }
+      this.loading = false
     },
     handleButton() {
       const _this = this as any
@@ -118,6 +128,7 @@ export default Vue.extend({
       }
     },
     async handleCreateIuran() {
+      this.loading = true
       const _this = this as any
       const data = {
         id_siswa: this.model?.id_siswa,
@@ -125,7 +136,9 @@ export default Vue.extend({
         ansuran: formatterNumber(this.iuran)
       }
       const result = await this.pembayaranService.request('pembayaran-iuran', data)
+      _this.$modal.hide('modalIuran')
       if(result.code === 200) {
+        this.loading = false
         _this.$toast.success(result.message)
         const iuran = formatterNumber(this.iuran) || 0
         const item = {
@@ -135,10 +148,9 @@ export default Vue.extend({
           nama: this.dataSiswa?.nama,
           kelas: this.dataSiswa?.namaKelas,
           nis: this.dataSiswa?.nis,
-          petugas: 'Dani',
+          petugas: this.loggedInUser.nama,
           sisaBayar: formatterCurrency(this.dataIuran?.sisaBayar - iuran)
         }
-        _this.$modal.hide('modalIuran')
         if(item.phone) {
           this.sendWa(item)
         }
@@ -158,7 +170,7 @@ export default Vue.extend({
       'Metode : SETOR TUNAI %0A' +
       'Ansuran: Rp. ' + item.total + '%0A' +
       'Sisa Tunggakan: ' + item.sisaBayar + '%0A%0A' +
-      'PESAN TEXT ini Dikirim OTOMATIS Oleh SYSTEM, Sebagai informasi terkait Pembayaran SPP'
+      'PESAN TEXT ini Dikirim OTOMATIS Oleh SYSTEM, Sebagai informasi terkait Pembayaran Sekolah'
 
       window.open(kirimWa)
     },

@@ -35,10 +35,10 @@
 
       <div class="flex flex-col lg:flex-row gap-4 mb-4">
         <div class="w-full">
-          <q-input v-model="valueContent.pimpinan" label="Kepala Sekolah" placeholder="Masukkan nama kepala sekolah berserta gelar"  />
+          <q-input v-model="valueContent.pimpinan" label="Penanggung Jawab" placeholder="Masukkan nama penanggung jawab berserta gelar"  />
         </div>
         <div class="w-full">
-          <q-input v-model="valueContent.nip_pimpinan" label="NIP Kepala Sekolah" placeholder="Masukkan NIP kepala sekolah" />
+          <q-input v-model="valueContent.nip_pimpinan" label="NIP Penanggung Jawab" placeholder="Masukkan NIP penanggung jawab" />
         </div>
       </div>
 

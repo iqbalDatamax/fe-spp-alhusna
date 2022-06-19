@@ -18,15 +18,17 @@
       <content-print :siswa="dataSiswa" :ta="periode" :list="listSpp" :tgl="tgl" />
     </div>
     <modal-review-bayar :siswa="dataSiswa" :ta="periode" :list="listSpp" :tgl="tgl" class="print:hidden" @clickModal="handleModal" />
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { UsersService } from '~/systems/services/service-users'
 import { MasterService } from '~/systems/services/service-master-data' 
 import { PembayaranService } from '~/systems/services/services-pembayaran' 
-import { dateFormatter } from '@/systems/helpers/formatter'
+import { dateFormatter, formatterNumber } from '@/systems/helpers/formatter'
 
 export default Vue.extend({
   components: {
@@ -65,7 +67,8 @@ export default Vue.extend({
       dataSiswa: {} as any,
       periode: null,
       listSpp: [] as any,
-      tgl: dateFormatter('date', Date.now())
+      tgl: dateFormatter('date', Date.now()),
+      loading: false
     }
   },
   computed: {
@@ -75,7 +78,8 @@ export default Vue.extend({
         total += item.total
       })
       return total
-    }
+    },
+    ...mapGetters(['loggedInUser'])
   },
   watch: {
     'model.id_periode'() {
@@ -87,8 +91,10 @@ export default Vue.extend({
   },  
   methods: {
     async initialize() {
+      this.loading = true
       await this.fetchTa()
       await this.fetchSiswa()
+      this.loading = false
     },
     async fetchSiswa() {
       const params = { id_periode: this.model?.id_periode }
@@ -110,6 +116,7 @@ export default Vue.extend({
       }
     },
     async handleSearch() {
+      this.loading = true
       const data = {
         id_siswa: this.model?.id_siswa,
         params : { periode: this.model?.id_periode }
@@ -121,6 +128,7 @@ export default Vue.extend({
         const data = result.data
         this.rows = data.dataSpp
         this.dataSiswa = data.dataSiswa
+        this.loading = false
       }
     },
     handleButton(act:any, id:any, row:any) {
@@ -138,30 +146,40 @@ export default Vue.extend({
         _this.$modal.show('modalPembayaran')
       }
     },
+    async totalSppOk() {
+      let totalSpp = 0
+      await this.listSpp.forEach((item:any) => {
+        const numTot:any = formatterNumber(item.total)
+        totalSpp += numTot
+      })
+      return totalSpp
+    },
     async handleModal(menu:any) {
+      this.loading = true
       const _this = this as any
       if (menu === 'submit') {
         const spp = await this.listSpp.map((item:any) => {
           return item.id
         })
-
+        const totalSpp = await this.totalSppOk()
         const data = {
           bulan: spp,
           id_siswa: this.dataSiswa?.id,
           id_periode: this.model?.id_periode
         }
         const result = await this.pembayaranService.request('pembayaran', data)
+        _this.$modal.hide('modalPembayaran')
         if(result.code === 200) {
+          this.loading = false
           _this.$toast.success(result.message)
-          _this.$modal.hide('modalPembayaran')
           const item = {
             phone: this.dataSiswa?.telpon || null,
-            total: this.grandTotal,
+            total: totalSpp,
             tanggal: this.tgl,
             nama: this.dataSiswa?.nama,
-            kelas: this.dataSiswa?.kelas,
+            kelas: this.dataSiswa?.namaKelas,
             nis: this.dataSiswa?.nis,
-            petugas: 'Dani',
+            petugas: this.loggedInUser.nama,
             bulan: spp.toString()
           }
           if(item.phone) {

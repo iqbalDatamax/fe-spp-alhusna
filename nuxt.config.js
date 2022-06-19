@@ -90,8 +90,8 @@ export default {
   },
 
   axios: {
-    baseURL: 'http://103.179.57.184:8080'
-    // baseURL: 'http://localhost:8000'
+    // baseURL: 'http://103.179.57.184:8080'
+    baseURL: 'http://localhost:8000'
   },
 
   // nuxt auth configuration
@@ -116,7 +116,7 @@ export default {
   },
 
   router: {
-    middleware: ['auth']
+    // middleware: ['auth']
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

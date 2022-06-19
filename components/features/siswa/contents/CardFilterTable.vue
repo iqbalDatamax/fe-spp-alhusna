@@ -1,21 +1,24 @@
 <template>
   <div>
     <div class="mb-[15px] flex flex-col lg:flex-row justify-between  gap-2">
-      <button class="btn-primary text-sm" @click="$emit('clickButton')"><i class="fas fa-plus mr-2"></i>Tambah Siswa</button>
+      <div class="flex flex-row gap-2">
+        <button class="btn-primary text-sm" @click="$emit('clickButton')"><i class="fas fa-plus mr-2"></i>Tambah Siswa</button>
+        <button class="btn-primary text-sm" @click="$emit('clickFile')"><i class="fas fa-plus mr-2"></i>Dengan File</button>
+      </div>
       <div class="flex flex-col lg:flex-row gap-2">
-        <select v-model="valueContent.id_periode" class="base-input w-full lg:w-1/6">
+        <select v-model="valueContent.id_periode" class="base-input w-full lg:w-1/6" @change="$emit('changeSelect', 'periode')">
+          <!-- <option value="">Semua</option> -->
           <option v-for="(dt, index) in periode" :key="index" :value="dt.id">{{dt.tahunAjaran}}</option>
         </select>
         <select v-model="valueContent.idKelas" class="base-input w-48" @change="$emit('changeSelect', 'kelas')">
           <option value="">Semua Kelas</option>
-          <option v-for="(kls, index) in itemKelas" :key="index" :value="kls.id"> {{kls.namaKelas}} </option>
+          <option value="belum">Belum ada kelas</option>
+          <option v-for="(kls, index) in itemKelas" :key="index" :value="kls.idKelas"> {{kls.namaKelas}} </option>
         </select>
-        <select v-model="valueContent.perPage" class="base-input w-32" @change="$emit('changeSelect', 'perpage')">
-          <option :value="5">5 item</option>
-          <option :value="10">10 item</option>
-          <option :value="20">20 item</option>
-          <option :value="50">50 item</option>
-          <option :value="100">100 item</option>
+        <select v-model="valueContent.status" class="base-input w-32" @change="$emit('changeSelect', 'status')">
+          <option value="">Semua</option>
+          <option value="aktif">Aktif</option>
+          <option value="tidak-aktif">Lulus</option>
         </select>
         <!-- <input type="text" placeholder="Cari admin ..." class="w-full lg:w-80 base-input"> -->
         <div class="flex text-black">

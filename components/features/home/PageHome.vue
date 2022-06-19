@@ -13,6 +13,7 @@
         </div>
       </div>
     </content-body>
+    <q-loading :loading="loading" />
   </div>
 </template>
 
@@ -39,7 +40,8 @@ export default Vue.extend({
         { id: 5, icon: 'fas fa-dollar-sign', text: 'Total Tunggakan SPP Bulan Ini', value: 0 },
         { id: 6, icon: 'fas fa-money-bill-wave', text: 'Total Pembayaran Iuran Tahunan', value: 0 },
         { id: 7, icon: 'fas fa-hand-holding-usd', text: 'Total Tunggakan Iuran Tahunan', value: 0 }
-      ] as any
+      ] as any,
+      loading: false
     }
   },
   mounted() {
@@ -47,10 +49,12 @@ export default Vue.extend({
   },
   methods: {
     async initialize(){
+      this.loading = true
       await this.fetchTa()
       this.getTotalSiswa()
       this.getTotalSpp()
       this.getTotalIuran()
+      this.loading = false
     },
     async getTotalSiswa() {
       const params = { id_periode: this.id_periode}

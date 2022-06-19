@@ -1,10 +1,17 @@
 <template>
   <div>
     <content-body title="data siswa" icon="fas fa-users">
-      <card-filter-table v-model="filter" :periode="listTa" :item-kelas="listKelas" @clickButton="handleCreate" @changeSelect="FilterPage" @eventChange="handleSearch" />
+      <card-filter-table v-model="filter" :periode="listTa" :item-kelas="listKelas" @clickButton="handleCreate" @clickFile="openModalFile" @changeSelect="FilterPage" @eventChange="handleSearch" />
       <div v-if="rows && rows.length > 0" class="overflow-x-auto pb-4">
         <table-checked :with-check="true" :columns="columns" :rows="rows" :top-action="topAction" :action-content="actionContent" @clickButton="handleAction" @clickActionTop="handleActionTop" />
-      <div class="mt-4 lg:px-3">
+      <div class="mt-4 lg:px-3 flex justify-between">
+        <select v-model="perPage" class="base-input w-32" @change="FilterPage('perpage')">
+          <option :value="5">5 item</option>
+          <option :value="10">10 item</option>
+          <option :value="20">20 item</option>
+          <option :value="50">50 item</option>
+          <option :value="100">100 item</option>
+        </select>
         <vue-ads-pagination
           :total-items="totalItems"
           :max-visible-pages="5"
@@ -15,9 +22,14 @@
         </vue-ads-pagination>
       </div>
       </div>
+      <div v-else class="my-6 p-4 shadow-sm border rounded-md">
+        <p class="text-center text-danger font-semibold text-sm">Data tidak ditemukan....</p>
+      </div>
     </content-body>
     <alert-information v-bind="bindAlert" @clickConfirm="handleConfirmAlert" />
     <modal-kelas  v-model="idKp" :item-kelas="listKelas" @clickModal="handleModalsubmit" />
+    <modal-file @clickModal="handleModalsubmit" />
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
@@ -34,6 +46,7 @@ export default Vue.extend({
     TableChecked: () => import('~/components/features/public/table/TableChecked.vue'),
     CardFilterTable: () => import('@/components/features/siswa/contents/CardFilterTable.vue'),
     ModalKelas: () => import('@/components/features/siswa/contents/ModalPilihKelas.vue'),
+    ModalFile: () => import('@/components/features/siswa/contents/ModalFile.vue'),
     VueAdsPagination
   },
   data() {
@@ -41,7 +54,7 @@ export default Vue.extend({
       usersService: new UsersService(this.$axios),
       masterService: new MasterService(this.$axios),
       filter: {
-        perPage: 10,
+        status: '',
         idKelas: ''
       } as any,
       perPage: 10,
@@ -72,7 +85,8 @@ export default Vue.extend({
       listKelas: [] as any,
       listTa: [] as any,
       dataCheckeed: [] as any,
-      idKp: 0
+      idKp: 0,
+      loading: false
     }
   },
   watch: {
@@ -84,15 +98,22 @@ export default Vue.extend({
     this.initialize()
   },
   methods: {
-    async initialize(params?:any) {
+    async initialize() {
+      this.loading = true
       await this.fetchTa()
       this.fetchPeriodeIuran()
-      const param = params || { page: this.page, limit: this.perPage }
+      this.fetchSiswa()
+      this.loading = false
+    },
+    async fetchSiswa(params?:any) {
+      this.loading = true
+      const param = params || { page: this.page, limit: this.perPage, id_periode:this.filter.id_periode, id_kelas: this.filter?.idKelas, }
       const result = await this.usersService.request('list-siswa', param)
       if(result.code === 200) {
         const data = result.data
         this.totalItems = data.totalItems
         this.rows = data.dataSiswa
+        this.loading = false
       }
     },
     async fetchTa() {
@@ -104,33 +125,46 @@ export default Vue.extend({
       }
     },
     async fetchPeriodeIuran() {
+      this.loading = true
       const params = { periode:this.filter.id_periode }
       const result = await this.masterService.request('list-iuran', params)
       if(result.code === 200) {
         const data = result.data
         this.listKelas = data
+        this.loading = false
       }
     },
     pageChange(page:any) {
       this.page = page;
-      const params = { page: this.page, limit: this.perPage }
-      this.initialize(params)
+      const params = { 
+        page: this.page,
+        limit: this.perPage,
+        id_kelas: this.filter?.idKelas,
+        id_periode:this.filter.id_periode,
+        status: this.filter.status 
+      }
+      this.fetchSiswa(params)
     },
     FilterPage(menu: any) {
       if(menu === 'kelas') {
         this.perPage = 50
-        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas }
-        this.initialize(params)
+        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas, id_periode:this.filter.id_periode, status: this.filter.status }
+        this.fetchSiswa(params)
+      } else if (menu === 'status'){
+        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas, id_periode:this.filter.id_periode, status: this.filter.status }
+        this.fetchSiswa(params)
+      } else if (menu === 'periode'){
+        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas, id_periode:this.filter.id_periode, status: this.filter.status }
+        this.fetchSiswa(params)
       } else {
-        this.perPage = this.filter?.perPage
-        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas }
-        this.initialize(params)
+        const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas, id_periode:this.filter.id_periode, status: this.filter.status }
+        this.fetchSiswa(params)
       }
     },
     handleSearch() {
       debounce(() => {
-				const params = { page: this.page, limit: this.perPage, nama: this.filter.search }
-				this.initialize(params)
+				const params = { page: this.page, limit: this.perPage, id_kelas: this.filter?.idKelas, id_periode:this.filter.id_periode, status: this.filter.status, nama: this.filter.search }
+				this.fetchSiswa(params)
 			}, 500)()
     },
     handleAction(menu:any, id: any){
@@ -143,6 +177,7 @@ export default Vue.extend({
       }
     },
     async handleConfirmAlert(id:any, act:string){
+      this.loading = true
       const _this = this as any
       if (act === 'delete') {
         const result = await this.usersService.request('delete-user', id)
@@ -150,6 +185,7 @@ export default Vue.extend({
           _this.initialize()
           _this.$toast.success(result.message)
           _this.$modal.hide('alertModal')
+          this.loading = false
         } else {
           _this.$toast.error(result.message)
         }
@@ -162,6 +198,7 @@ export default Vue.extend({
           _this.initialize()
           _this.$toast.success(result.message)
           _this.$modal.hide('alertModal')
+          this.loading = false
         } else {
           _this.$toast.error(result.message)
         }
@@ -185,7 +222,8 @@ export default Vue.extend({
         _this.$modal.show('alertModal')
       }
     },
-    async handleModalsubmit(menu: any) {
+    async handleModalsubmit(menu: any, file?: any) {
+      this.loading = true
       const _this = this as any
       if(menu === 'atur-kelas') {
         const data = {
@@ -194,13 +232,35 @@ export default Vue.extend({
         }
         const result = await this.usersService.request('atur-kelas', data)
         if(result.code === 200) {
-          _this.initialize()
+          _this.fetchSiswa()
           _this.$toast.success(result.message)
+          _this.dataCheckeed = []
+          _this.idKp = null
           _this.$modal.hide('modalPilihKelas')
+          this.loading = false
         } else {
           _this.$toast.error(result.message)
+          this.loading = false
+        }
+      } else if (menu === 'file') {
+        _this.$modal.hide('modalFile')
+        const formdata = new FormData()
+        formdata.append('file', file)
+        const result = await this.usersService.request('file', formdata)
+        if(result.code === 200) {
+          _this.$toast.success(result.message)
+          this.filter.idKelas = 'belum'
+          this.fetchSiswa()
+          this.loading = false
+        } else {
+          _this.$toast.error(result.message)
+          this.loading = false
         }
       }
+    },
+    openModalFile(){
+      const _this = this as any 
+      _this.$modal.show('modalFile')
     }
   }
 })

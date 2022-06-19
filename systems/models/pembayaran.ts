@@ -1,4 +1,4 @@
-import { SiswaModel } from '@/systems/models/users'
+import { GetSiswaModel } from '@/systems/models/users'
 import { dateFormatter, formatterCurrency } from '@/systems/helpers/formatter'
 
 export class SppModel {
@@ -19,21 +19,21 @@ export class SppModel {
     this.isDisable = data.status === 'lunas'
     this.bulan = data.bulan || null
     this.potongan = formatterCurrency(data.potongan || null) || '-'
-    this.total = formatterCurrency(data.ansuran - data.potongan || null)
-    this.ansuran = formatterCurrency(data.ansuran || null)
+    this.total = formatterCurrency(data.ansuran - data.potongan || null) || 0
+    this.ansuran = formatterCurrency(data.ansuran || null) || 0
     this.tangalBayar = dateFormatter('date', data.tanggal_bayar || null) || '-'
     this.status = data.status || null
   }
 }
 
 export class PembayaranSppModel {
-  dataSiswa: SiswaModel
+  dataSiswa: GetSiswaModel
   dataSpp: SppModel
   idSpp:any
 
   constructor(data:any) {
     data = data || {}
-    this.dataSiswa =  new SiswaModel(data.user)
+    this.dataSiswa =  new GetSiswaModel(data.user)
     this.dataSpp = data.spp && data.spp.length > 0 ? data.spp.map((item: any) => new SppModel(item)) : []
     this.idSpp = data.id_spp || null
   }
@@ -56,11 +56,11 @@ export class IuranModel {
   }
 }
 export class PembayaranIuranModel {
-  dataSiswa: SiswaModel
+  dataSiswa: GetSiswaModel
   dataIuran: IuranModel
 
   constructor(data: any) {
-    this.dataSiswa = new SiswaModel(data.user)
+    this.dataSiswa = new GetSiswaModel(data.user)
     this.dataIuran = new IuranModel(data.data_iuran)
   }
 }
@@ -112,15 +112,17 @@ export class LaporanEkskulModel {
   deskripsi: string
   ekskul: string
   namaSiswa: string
+  nisSiswa: any
   petugas: string
   tanggalBayar: any
 
   constructor(data:any) {
     data = data || {}
-    this.iuran = formatterCurrency(data.iuran || null)
+    this.iuran = formatterCurrency(data.ansuran || null)
     this.deskripsi = data.deskripsi || null
     this.ekskul = data.ekskul || null
     this.namaSiswa = data.nama_siswa || null
+    this.nisSiswa = data?.nis || null
     this.petugas = data.petugas || null
     this.tanggalBayar = dateFormatter('date', data.tanggal_bayar || null) || '-'
   }

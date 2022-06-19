@@ -9,8 +9,9 @@ import QSelect from '~/components/supports/QSelect'
 import QTextArea from '~/components/supports/QTextArea'
 import UploadImage from '~/components/supports/UploadImage'
 import AlertInformation from '~/components/supports/AlertInformation'
+import QLoading from '~/components/supports/QLoading'
 
-const components = { QInput, QInputPrice, QSelect, QTextArea, UploadImage, AlertInformation }
+const components = { QInput, QInputPrice, QSelect, QTextArea, UploadImage, AlertInformation, QLoading }
 
 Object.entries(components).forEach(([name, component]) => {
   Vue.component(name, component)

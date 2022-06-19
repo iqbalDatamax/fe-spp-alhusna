@@ -1,7 +1,7 @@
 <template>
 	<div class="print:hidden">
 		<aside class="sticky top-0 bg-white h-screen overflow-y-auto border-r w-64 shadow-xl">
-      <content-side :side-list="sideList" class="mt-20" />
+      <content-side :side-list="sideList" class="mt-16" />
 	  </aside>
 	</div>
 </template>
@@ -21,7 +21,7 @@ export default Vue.extend({
       { id: 'pembayaranspp', name: 'pembayaran SPP', icon: 'far fa-list-alt', path: '/pembayaran-spp' },
       { id: 'pembayaran', name: 'pembayaran lainya', icon: 'fas fa-tasks', open: false, list: [
           { id: 'pembayaran-tahunan', name: 'Iuran Tahunan', path: '/iuran-tahunan' },
-          { id: 'pembayaran-ekskul', name: 'Ekstrakurikuler', path: '/pembayaran-ekskul' }
+          { id: 'pembayaran-ekskul', name: 'Lainnya', path: '/pembayaran-ekskul' }
         ]
       },
       { id: 'laporan', name: 'Laporan-laporan', icon: 'fas fa-file-signature', open: false, list: [
@@ -31,10 +31,10 @@ export default Vue.extend({
         ]
       },
       { id: 'master-data', name: 'master data', icon: 'fas fa-server', open: false, list: [
-          { id: 'beasiswa', name: 'Atur Penerima Beasiswa', path: '/beasiswa' },
-          { id: 'kelas', name: 'kelas', path: '/kelas' },
           { id: 'ta', name: 'tahun ajaran & iuran', path: '/tahun-ajaran' },
-          { id: 'ekskul', name: 'Ekstrakurikuler', path: '/ekskul' }
+          { id: 'kelas', name: 'kelas', path: '/kelas' },
+          { id: 'beasiswa', name: 'Atur Penerima Beasiswa', path: '/beasiswa' },
+          { id: 'ekskul', name: 'Jenis Pembayaran', path: '/ekskul' },
         ]
       },
       { id: 'master-user', name: 'data user', icon: 'fas fa-users', open: false, list: [
@@ -52,7 +52,7 @@ export default Vue.extend({
     ]
     return {
       listSuperAdmin: list,
-			listAdmin: list.filter((item: any) => ['dashboard', 'pembayaranspp', 'pembayaran', 'laporan', 'master-data', 'master-user', 'profil'].includes(item.id))
+			listAdmin: list.filter((item: any) => ['dashboard', 'pembayaranspp', 'pembayaran', 'laporan'].includes(item.id))
     }
   },
   computed: {

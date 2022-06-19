@@ -1,12 +1,12 @@
 <template>
   <div>
-    <content-body title="Laporan Pembayaran SPP" icon="fas fa-file-signature">
+    <content-body title="Laporan Pembayaran SPP" icon="fas fa-file-signature" class="print:hidden">
       <card-filter v-model="model" :periode="listTa" :kelas="kelas" :is-print="isPrint" @clickButton="handleClick" @clickPrint="handleDownload" />
       <div v-if="rows.length > 0">
         <div class="shadow p-2.5 border rounded mt-4">
           <div v-if="rows && rows.length > 0" id="print-body" class="overflow-x-auto pb-4">
             <card-kop-laporan />
-            <div class="text-center text-h5 font-semibold text-black border-t border-black pb-4">
+            <div class="text-center text-h5 font-semibold border-t border-black pb-4">
               <p class="pt-2">Laporan {{model.status === 'lunas' ? 'Pembayaran' : 'Tunggakan' }} SPP</p>
               <p class="">Tahun Ajaran {{ta}}</p>
               <p v-if="model.startDate && model.endDate" class="text-body">{{dateFormat(model.startDate)}} <span class="font-normal"> - </span> {{dateFormat(model.endDate)}}</p>
@@ -16,10 +16,21 @@
           </div>
         </div>
       </div>
-      <div v-else class="my-6 p-4 shadow-sm border rounded-md">
+      <div v-else class="my-6 p-4 shadow-sm border rounded-md print:hidden">
         <p class="text-center text-black font-semibold text-sm">Data laporan tidak ditemukan, silahkan filter kembali</p>
       </div>
     </content-body>
+    <div v-if="rows && rows.length > 0" class="hidden print:block">
+      <card-kop-laporan />
+      <div class="text-center text-h5 font-semibold border-t border-black pb-4">
+        <p class="pt-2">Laporan {{model.status === 'lunas' ? 'Pembayaran' : 'Tunggakan' }} SPP</p>
+        <p class="">Tahun Ajaran {{ta}}</p>
+        <p v-if="model.startDate && model.endDate" class="text-body">{{dateFormat(model.startDate)}} <span class="font-normal"> - </span> {{dateFormat(model.endDate)}}</p>
+      </div>
+      <table-checked :with-nomor="true" :columns="columns" :rows="rows"  />
+      <card-footer :potongan="potongan" :sub-total="subTotal" :grand-total="grandTotal" :tgl-current="tgl" />
+    </div>
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
@@ -60,7 +71,8 @@ export default Vue.extend({
         { key: 'status', text: 'Status', align: 'center' },
       ],
       rows: [],
-      tgl: dateFormatter('date', Date.now())
+      tgl: dateFormatter('date', Date.now()),
+      loading: false
     }
   },
   computed: {
@@ -93,9 +105,11 @@ export default Vue.extend({
     this.initialize()
   },
   methods: {
-    initialize(){
-      this.fetchTa()
+    async initialize(){
+      this.loading = true
+      await this.fetchTa()
       this.fetchKelas()
+      this.loading = false
     },
     async fetchTa() {
       const _this = this as any
@@ -114,11 +128,13 @@ export default Vue.extend({
       }
     },
     async handleClick() {
+      this.loading = true
       const params = this.model
       const result = await this.pembayaranService.request('laporan-spp', params)
       if(result.code === 200) {
         const data = result.data
         this.rows = data
+        this.loading = false
         if(this.rows.length > 0) {
           this.isPrint = true
         } else {
@@ -130,6 +146,7 @@ export default Vue.extend({
       return dateFormatter('date', date)
     },
     handleDownload(): void {
+      // window.print()
       const JsPDF: any = (window as any).jspdf?.jsPDF || null
       const htmlToPdf: any = (window as any).html2pdf
       const body = document.querySelector('#print-body')

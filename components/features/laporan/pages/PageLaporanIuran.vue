@@ -20,6 +20,7 @@
         <p class="text-center text-black font-semibold text-sm">Data laporan tidak ditemukan, silahkan filter kembali</p>
       </div>
     </content-body>
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
@@ -50,6 +51,7 @@ export default Vue.extend({
       ta: '',
       columns: [
         { key: 'namaSiswa', text: 'Nama Siswa', align: 'left' },
+        { key: 'nisSiswa', text: 'NIS', align: 'center' },
         { key: 'iuran', text: 'Iuran', align: 'center' },
         { key: 'potongan', text: 'Potongan', align: 'center' },
         { key: 'totalAnsuran', text: 'Total Ansuran', align: 'center' },
@@ -59,7 +61,8 @@ export default Vue.extend({
         { key: 'status', text: 'Status', align: 'center' },
       ],
       rows: [],
-      tgl: dateFormatter('date', Date.now())
+      tgl: dateFormatter('date', Date.now()),
+      loading: false
     }
   },
   computed: {
@@ -92,9 +95,11 @@ export default Vue.extend({
     this.initialize()
   },
   methods: {
-    initialize(){
-      this.fetchTa()
+    async initialize(){
+      this.loading = true
+      await this.fetchTa()
       this.fetchKelas()
+      this.loading = false
     },
     async fetchTa() {
       const _this = this as any
@@ -113,11 +118,13 @@ export default Vue.extend({
       }
     },
     async handleClick() {
+      this.loading = true
       const params = this.model
       const result = await this.pembayaranService.request('laporan-iuran', params)
       if(result.code === 200) {
         const data = result.data
         this.rows = data
+        this.loading = false
         if(this.rows.length > 0) {
           this.isPrint = true
         } else {

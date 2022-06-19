@@ -7,16 +7,16 @@
           <div class="flex text-body">
             <div class="mr-5 flex items-center">
               <input id="radioAdmin" v-model="valueContent.peran" type="radio" value="admin" class="h-4 w-4">
-              <label for="radioaktif" class="ml-2">Admin</label>
+              <label for="radioAdmin" class="ml-2">Admin</label>
             </div>
             <div class="mr-3 flex items-center">
               <input id="radioGuru" v-model="valueContent.peran" type="radio" value="guru" class="h-4 w-4">
               <label for="radioGuru" class="ml-2">Guru</label>
             </div>
-            <div class="mr-3 flex items-center">
+            <!-- <div class="mr-3 flex items-center">
               <input id="radioSiswa" v-model="valueContent.peran" type="radio" value="siswa" class="h-4 w-4">
               <label for="radioSiswa" class="ml-2">Siswa</label>
-            </div>
+            </div> -->
           </div>
         </div>
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full">

@@ -37,6 +37,7 @@ export default Vue.extend({
         this.model = {}
       } else {
         const result = await _this.usersService.request('get-user', params, 'siswa')
+          console.log(result)
         if(result.code === 200) {
           const data = result.data
           this.model = {

@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/pembayaran-ekskul/pages/PagePembayaranEkskul.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-tu'],
   data() {
     return {}
   }

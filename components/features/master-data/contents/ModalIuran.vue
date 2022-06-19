@@ -11,7 +11,7 @@
             <i class="fas fa-info-circle mt-0.5"></i>
             <p class="label">Informasi penting</p>
           </div>
-          <p class="label text-danger pl-6">Pastikan anda menginput besaran IURAN SPP dan Tahunan dengan benar. Karena anda tidak dapat mengubah IURAN SPP dan Tahunan lagi!</p>
+          <p class="label text-danger pl-6">Pastikan anda menginput besaran IURAN SPP dan Tahunan dengan benar. Karena anda tidak dapat mengubah IURAN SPP dan Tahunan lagi setelah submit!</p>
         </div>
         <ValidationObserver v-slot="{ invalid }">
           <div class="mb-3">
@@ -19,13 +19,13 @@
           </div>
           <div class="mb-3">
             <ValidationProvider v-slot="{ errors }" rules="required" class="w-4/5">
-              <q-input-price v-model="valueContent.iuran_spp" label="IURAN SPP" placeholder="Masukkan iuran SPP" />
+              <q-input-price v-model="valueContent.iuran_spp" label="IURAN SPP" placeholder="Masukkan iuran SPP" :readonly="valueContent.cAt !== valueContent.uAt" />
               <span class="text-xs text-danger">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
           <div class="mb-3">
             <ValidationProvider v-slot="{ errors }" rules="required" class="w-4/5">
-              <q-input-price v-model="valueContent.iuran_tahunan" label="IURAN Tahunan" placeholder="Masukkan iuran tahunan" />
+              <q-input-price v-model="valueContent.iuran_tahunan" label="IURAN Tahunan" placeholder="Masukkan iuran tahunan" :readonly="valueContent.cAt !== valueContent.uAt" />
               <span class="text-xs text-danger">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>

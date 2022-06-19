@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/setting-profil/pages/PageSettingProfil.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-admin'],
   data() {
     return {}
   }

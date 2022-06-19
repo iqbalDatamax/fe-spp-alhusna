@@ -3,6 +3,7 @@
     <content-body title="Ubah Password Admin" icon="fas fa-key">
       <form-ubah-password :model="model" :admin="lists" @clickButton="handleSubmit" />
     </content-body>
+    <q-loading class="print:hidden" :loading="loading" />
   </div>
 </template>
 
@@ -22,7 +23,8 @@ export default Vue.extend({
       model: {
         peran: 'admin'
       } as any,
-      lists: [] as any
+      lists: [] as any,
+      loading: false
     }
   },
   watch: {
@@ -38,6 +40,7 @@ export default Vue.extend({
       this.fetchAdmin()
     },
     async fetchAdmin() {
+      this.loading = true
       if(this.model.peran === 'admin') {
         const result = await this.usersService.request('list-admin', {})
         const data = result.data
@@ -51,8 +54,10 @@ export default Vue.extend({
         const data = result.data
         this.lists = data.dataSiswa
       }
+      this.loading = false
     },
     async handleSubmit() {
+      this.loading = true
       const _this = this as any
       const data = {
         email: this.model?.email,
@@ -62,6 +67,7 @@ export default Vue.extend({
       if(result.code === 200 || result.code === 201) {
         _this.$toast.success(result.message)
         this.model = {}
+        this.loading = false
       }
     }
   }

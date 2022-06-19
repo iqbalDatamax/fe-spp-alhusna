@@ -12,7 +12,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/ubah-password/Pages/PageUbahPassword.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-admin'],
   data() {
     return {}
   },

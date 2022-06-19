@@ -19,7 +19,7 @@
         <div class="flex text-body">
           <div class="mr-5 flex items-center">
             <input id="radio1" v-model="valueContent.peran" type="radio" value="admin" class="h-4 w-4">
-            <label for="radio1" class="ml-2">Admin</label>
+            <label for="radio1" class="ml-2">Admin/TU</label>
           </div>
           <div class="mr-3 flex items-center">
             <input id="radio2" v-model="valueContent.peran" type="radio" value="super-admin" class="h-4 w-4">

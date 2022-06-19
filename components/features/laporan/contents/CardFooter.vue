@@ -17,11 +17,17 @@
       </div>
     </div>
 
-    <div class="flex justify-end mt-12">
+
+    <div class="flex justify-between mt-12">
+      <div class="flex flex-col text-body items-center w-1/4">
+        <p class="text-center mt-10"></p>
+        <p class="mb-12 text-center">Tata Usaha</p>
+        <p class="text-center border-b border-black capitalize">{{loggedInUser.nama || 'H. Sabrun, S.Pd'}}</p>
+      </div>
       <div class="flex flex-col text-body items-center w-1/4">
         <p class="text-center">Jakarta, {{tglCurrent}}</p>
-        <p class="mb-12 text-center">Kepala Sekolah</p>
-        <p class="text-center border-b border-black">{{profil.pimpinan || 'H. Sabrun, S.Pd'}}</p>
+        <p class="mb-12 text-center">Penanggung Jawab</p>
+        <p class="text-center border-b border-black capitalize">{{profil.pimpinan || 'H. Sabrun, S.Pd'}}</p>
         <p class="text-center">Nip.{{profil.nip_pimpinan || '20130875757'}}</p>
       </div>
     </div>
@@ -30,6 +36,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { ProfilService } from '~/systems/services/service-profil' 
 
 export default Vue.extend({
@@ -45,6 +52,9 @@ export default Vue.extend({
       profil: {} as any,
       imageDefault: require("~/assets/images/logotutwurihandayani.png")
     }
+  },
+  computed: {
+    ...mapGetters(['loggedInUser'])
   },
   mounted() {
     this.fetchProfil()

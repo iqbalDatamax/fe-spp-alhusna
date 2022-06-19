@@ -10,7 +10,7 @@ export default {
   components: {
     PageDefault: () => import('@/components/features/iuran-tahunan/Pages/PageIuranTahunan.vue')
   },
-  middleware: 'auth',
+  middleware: ['auth', 'cek-tu'],
   data() {
     return {}
   }

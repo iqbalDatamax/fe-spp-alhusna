@@ -53,6 +53,7 @@ export default Vue.extend({
         const result = await this.usersService.request('list-siswa', {})
         const data = result.data
         this.lists = data.dataSiswa
+        console.log(this.lists)
       }
       this.loading = false
     },

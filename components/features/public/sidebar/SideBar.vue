@@ -27,7 +27,7 @@ export default Vue.extend({
       { id: 'laporan', name: 'Laporan-laporan', icon: 'fas fa-file-signature', open: false, list: [
           { id: 'lap-spp', name: 'laporan pembayaran spp', path: '/laporan/spp' },
           { id: 'lap-iuran', name: 'laporan iuran tahunan', path: '/laporan/iuran' },
-          { id: 'lap-ekskul', name: 'laporan pembayaran ekskul', path: '/laporan/ekskul' }
+          { id: 'lap-ekskul', name: 'laporan pembayaran lainya', path: '/laporan/ekskul' }
         ]
       },
       { id: 'master-data', name: 'master data', icon: 'fas fa-server', open: false, list: [

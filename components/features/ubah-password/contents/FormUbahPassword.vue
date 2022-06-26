@@ -13,14 +13,31 @@
               <input id="radioGuru" v-model="valueContent.peran" type="radio" value="guru" class="h-4 w-4">
               <label for="radioGuru" class="ml-2">Guru</label>
             </div>
-            <!-- <div class="mr-3 flex items-center">
+            <div class="mr-3 flex items-center">
               <input id="radioSiswa" v-model="valueContent.peran" type="radio" value="siswa" class="h-4 w-4">
               <label for="radioSiswa" class="ml-2">Siswa</label>
-            </div> -->
+            </div>
           </div>
         </div>
-        <ValidationProvider v-slot="{ errors }" rules="required" class="w-full">
-          <label class="label">Pilih Email Admin <span class="text-danger">*</span></label>
+        <ValidationProvider v-if="valueContent.peran === 'siswa'" v-slot="{ errors }" rules="required" class="w-full">
+          <label class="label">Cari dan pilih NIS siswa <span class="text-danger">*</span></label>
+          <v-select
+            v-model="valueContent.email"
+            class="vs h-[40px] px-[3px] border-black-light bg-white outline-none border rounded-[4px] w-full"
+            placeholder="Cari nis siswa"
+            :reduce="(admin) => admin.nis"
+            label="nis"
+            :options="admin"
+          >
+            <span slot="no-options" class="text-danger">
+              NIS siswa tidak ditemukan...
+            </span>
+          </v-select>
+          <p class="text-xs text-danger">{{ errors[0] }}</p>
+        </ValidationProvider>
+
+        <ValidationProvider v-else v-slot="{ errors }" rules="required" class="w-full">
+          <label class="label">Cari dan pilih Email Admin/Guru <span class="text-danger">*</span></label>
           <v-select
             v-model="valueContent.email"
             class="vs h-[40px] px-[3px] border-black-light bg-white outline-none border rounded-[4px] w-full"
@@ -30,7 +47,7 @@
             :options="admin"
           >
             <span slot="no-options" class="text-danger">
-              Admin tidak ditemukan...
+              Admin atau guru tidak ditemukan...
             </span>
           </v-select>
           <p class="text-xs text-danger">{{ errors[0] }}</p>

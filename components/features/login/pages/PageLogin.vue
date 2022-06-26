@@ -44,9 +44,15 @@ export default Vue.extend({
         const { data } = await _this.$auth.loginWith('local', {
           data: user
         })
-        _this.$toast.success(data.message)
-        await this.afterLogin(data?.data?.peran)
-        this.loading = false
+        if(data?.data?.peran === 'guru') {
+          _this.$auth.logout()
+          _this.$toast.error('email atau password salah!')
+          this.loading = false
+        } else {
+          _this.$toast.success(data.message)
+          await this.afterLogin(data?.data?.peran)
+          this.loading = false
+        }
       } catch (error) {
         _this.$toast.error('email atau password salah!')
         this.loading = false

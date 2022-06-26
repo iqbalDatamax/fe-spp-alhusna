@@ -26,17 +26,17 @@
           <p class="text-xs text-danger">{{ errors[0] }}</p>
         </ValidationProvider>
         <ValidationProvider v-slot="{ errors }" rules="required" class="w-full mt-2.5">
-          <label class="label">Pilih Ekskul / Pembayaran lainya<span class="text-danger">*</span></label>
+          <label class="label">Pilih Pembayaran lainya<span class="text-danger">*</span></label>
           <v-select
             v-model="valueContent.ekskul"
             class="vs h-[40px] px-[3px] border-black-light bg-white outline-none border rounded-[4px] w-full"
-            placeholder="Cari Ekstracurikuler / pembayaran lainnya"
+            placeholder="Cari pembayaran lainnya"
             :reduce="(ekskul) => ekskul.id"
             label="namaEkskul"
             :options="ekskul"
           >
             <span slot="no-options" class="text-danger">
-              Ekskul / jenis pembayaran tidak ditemukan...
+              Jenis pembayaran tidak ditemukan...
             </span>
           </v-select>
           <p class="text-xs text-danger">{{ errors[0] }}</p>

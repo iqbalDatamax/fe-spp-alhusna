@@ -48,10 +48,10 @@ export default Vue.extend({
   },
   methods: {
     async initialize() {
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       await this.fetchPeriodeIuran()
-      this.loading = false
+      // this.loading = false
     },
     async fetchTa() {
       const result = await this.masterService.request('list-ta')

@@ -106,10 +106,10 @@ export default Vue.extend({
   },
   methods: {
     async initialize(){
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       this.fetchKelas()
-      this.loading = false
+      // this.loading = false
     },
     async fetchTa() {
       const _this = this as any

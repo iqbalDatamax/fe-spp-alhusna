@@ -76,10 +76,10 @@ export default Vue.extend({
   },  
   methods: {
     async initialize() {
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       await this.fetchSiswa()
-      this.loading = false
+      // this.loading = false
     },
     async fetchSiswa() {
       const params = { id_periode: this.model?.id_periode }

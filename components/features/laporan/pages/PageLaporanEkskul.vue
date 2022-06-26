@@ -78,11 +78,11 @@ export default Vue.extend({
   },
   methods: {
     async initialize(){
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       this.fetchEkskul()
       this.handleClick()
-      this.loading = false
+      // this.loading = false
     },
     async fetchTa() {
       const result = await this.masterService.request('list-ta')

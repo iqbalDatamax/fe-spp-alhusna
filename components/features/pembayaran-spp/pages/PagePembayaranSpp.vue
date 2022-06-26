@@ -91,17 +91,17 @@ export default Vue.extend({
   },  
   methods: {
     async initialize() {
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       await this.fetchSiswa()
-      this.loading = false
+      // this.loading = false
     },
     async fetchSiswa() {
-      const params = { id_periode: this.model?.id_periode }
+      const params = { id_periode: this.model?.id_periode || null }
       const result = await this.usersService.request('siswa-aktif', params)
       if(result.code === 200) {
         const data = result.data
-        this.listSiswa = data
+        this.listSiswa = data || null
       }
     },
     async fetchTa() {
@@ -111,7 +111,7 @@ export default Vue.extend({
         const data = result.data
         this.listTa = data
         this.model = {
-          id_periode: _this.listTa[0].id
+          id_periode: _this.listTa[0]?.id || null
         }
       }
     },

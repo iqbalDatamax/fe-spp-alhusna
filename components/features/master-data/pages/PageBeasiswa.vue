@@ -54,13 +54,13 @@ export default Vue.extend({
   },
   methods: {
     async initialize() {
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       this.fetchSiswa()
       const result = await this.masterService.request('list-beasiswa')
       if(result.code === 200) {
         this.rows = result.data
-        this.loading = false
+        // this.loading = false
       }
     },
     async fetchSiswa() {

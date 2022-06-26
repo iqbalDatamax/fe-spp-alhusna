@@ -99,11 +99,11 @@ export default Vue.extend({
   },
   methods: {
     async initialize() {
-      this.loading = true
+      // this.loading = true
       await this.fetchTa()
       this.fetchPeriodeIuran()
       this.fetchSiswa()
-      this.loading = false
+      // this.loading = false
     },
     async fetchSiswa(params?:any) {
       this.loading = true

@@ -79,7 +79,7 @@ export default Vue.extend({
       const result = await this.masterService.request('list-ta')
       if(result.code === 200) {
         const data = result.data
-        this.id_periode = data[0].id
+        this.id_periode = data[0]?.id || null
       }
     },
 
